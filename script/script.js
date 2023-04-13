@@ -11,44 +11,47 @@ function startCrono() {
     let Crono = document.getElementById('crono');
     let exitHours = 0;
     let exitMinutes = 0;
-    intervalCont++;
+    
+    if (!exitTime) {
+        alert("Digite um horário!");
+        return;
+    } else {
+        intervalCont++;
+        let interval = setInterval(() => {
+            if (intervalCont >= 1) {
+                clearInterval(interval);
+                intervalCont = 0;
+                return;
+            }
 
+            let nowHours = new Date().getHours();
+            let nowMinutes = new Date().getMinutes();
+            exitHours = Number(exitTime.slice(0, 2));
+            exitMinutes = Number(exitTime.slice(-2));
+            let leftMinutes = 0;
+            let leftHours = 0;
 
-    let interval = setInterval(() => {
-        if(intervalCont >= 1){
-            console.log(intervalCont);
-            clearInterval(interval);
-            intervalCont = 0;
-            return;
-        }
+            exitHours = exitHours * 60;
+            exitMinutes += exitHours;
 
-        let nowHours = new Date().getHours();
-        let nowMinutes = new Date().getMinutes();
-        exitHours = Number(exitTime.slice(0, 2));
-        exitMinutes = Number(exitTime.slice(-2));
-        let leftMinutes = 0;
-        let leftHours = 0;
+            nowHours = nowHours * 60;
+            nowMinutes += nowHours;
 
-        exitHours = exitHours * 60;
-        exitMinutes += exitHours;
+            leftMinutes = exitMinutes - nowMinutes;
 
-        nowHours = nowHours * 60;
-        nowMinutes += nowHours;
+            if (leftMinutes < 0) {
+                leftMinutes += 1440;
+            }
 
-        leftMinutes = exitMinutes - nowMinutes;
+            if (leftMinutes == 0) {
+                Crono.innerHTML = `Está na hora de ir embora!`;
+            } else {
+                leftHours = parseInt(leftMinutes / 60);
 
-        if(leftMinutes < 0){
-            leftMinutes += 1440;
-        }
+                leftMinutes = leftMinutes % 60;
 
-        if (leftMinutes == 0) {
-            Crono.innerHTML = `Está na hora de ir embora!`;
-        } else {
-            leftHours = parseInt(leftMinutes / 60);
-
-            leftMinutes = leftMinutes % 60;
-
-            Crono.innerHTML = `Falta(m) ${leftHours} hora(s) e ${leftMinutes} minuto(s).`;
-        }
-    }, 1000);
+                Crono.innerHTML = `Falta(m) ${leftHours} hora(s) e ${leftMinutes} minuto(s).`;
+            }
+        }, 1000);
+    }
 }
